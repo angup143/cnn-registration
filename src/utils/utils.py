@@ -89,6 +89,7 @@ def pd_expand(PD, k):
     return PD[i, j]
 
 def tps_warp(Y, T, Y_image, out_shape):
+    print(out_shape,'outshape')
     Y_height, Y_width = Y_image.shape[:2]
     T_height, T_width = out_shape[:2]
 
@@ -106,7 +107,7 @@ def tps_warp(Y, T, Y_image, out_shape):
     keep = np.logical_and(keep, jY<Y_width)
     iY, jY, iT, jT = iY[keep], jY[keep], iT[keep], jT[keep]
 
-    out_image = np.zeros(out_shape, dtype='uint8')
+    out_image = np.zeros(out_shape, dtype='uint16')
     out_image[iT, jT, :] = Y_image[iY, jY, :]
 
     return out_image
@@ -114,7 +115,7 @@ def tps_warp(Y, T, Y_image, out_shape):
 def checkboard(I1, I2, n=7):
     assert I1.shape == I2.shape
     height, width, channels = I1.shape
-    hi, wi = height/n, width/n
+    hi, wi = height//n, width//n
     outshape = (hi*n, wi*n, channels)
 
     out_image = np.zeros(outshape, dtype='uint8')
