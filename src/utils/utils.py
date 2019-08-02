@@ -110,7 +110,7 @@ def tps_warp(Y, T, Y_image, out_shape):
     out_image = np.zeros(out_shape, dtype='uint16')
     out_image[iT, jT, :] = Y_image[iY, jY, :]
 
-    return out_image
+    return out_image, (iT,jT), (iY, jY)
 
 def checkboard(I1, I2, n=7):
     assert I1.shape == I2.shape
