@@ -28,8 +28,8 @@ def get_warped_coords(img, rot):
 
 
 if __name__ == '__main__':
-    csv_file = '/home/ananya/Documents/rds-share/data/act_mapi/test/urban_test_files/test.txt'
-    output_txtfile = '/home/ananya/Documents/rds-share/data/act_mapi/test/urban_test_files/2017_cnnreg_results.txt'
+    csv_file = '/home/ananya/rds-share/data/act_mapi/test/urban_test_files/test.txt'
+    output_txtfile = '/home/ananya/rds-share/data/act_mapi/test/urban_test_files/2017_cnnreg_results.txt'
     
     metrics_rmse = []
     metrics_mae = []
