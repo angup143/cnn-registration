@@ -14,7 +14,7 @@ import Registration
 from utils.utils import *
 
 def get_warped_coords(img, rot):
-    rot_rad = rot*math.pi/180
+    rot_rad = - rot*math.pi/180
     img_shape = np.shape(img)
 
     tform =  tf.SimilarityTransform(rotation=rot_rad)
@@ -25,10 +25,10 @@ def get_warped_coords(img, rot):
 
     warped_coords = tf.warp_coords(tf_shift + (tform + tf_shift_inv), img_shape)
 
-
+    return warped_coords
 
 if __name__ == '__main__':
-    csv_file = '/home/ananya/rds-share/data/act_mapi/test/urban_test_files/test.txt'
+    csv_file = '/home/ananya/rds-share/data/act_mapi/test/urban_test_files/2017.txt'
     output_txtfile = '/home/ananya/rds-share/data/act_mapi/test/urban_test_files/2017_cnnreg_results.txt'
     
     metrics_rmse = []
@@ -43,7 +43,7 @@ if __name__ == '__main__':
             reference_img_path = re.sub('2017', '2018', row[0])
             print('reference img', reference_img_path)
             query_img_path = row[1]
-            rot = row[2]
+            rot =int(row[2])
             
             query_img = cv2.imread(query_img_path, 1)
             query_img = cv2.cvtColor(query_img, cv2.COLOR_BGR2RGB)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
             X, Y, Z = reg.register(reference_img, query_img)
             registered_img, est_coords, in_coords = tps_warp(Y, Z, query_img, reference_img.shape)
 
-            warped_estimated_coords = np.zeros(reference_img.shape)
+            warped_estimated_coords = np.zeros([reference_img.shape[2], reference_img.shape[0], reference_img.shape[1]])
             warped_estimated_coords[0:2, est_coords[0],est_coords[1]]=np.asarray(in_coords)
             warped_estimated_coords = np.repeat(np.expand_dims(warped_estimated_coords, axis=-1),3,axis=-1)
             warped_estimated_coords[2] = [0,1,2]
@@ -64,7 +64,7 @@ if __name__ == '__main__':
             mae = np.mean(np.abs(warped_actual_coords - warped_estimated_coords))
 
             print('Image: {}, rmse:{}, mae:{}, gt_rot:{}'.format(query_img_path,rmse,mae,rot))
-            output_rows.append(query_img_path,rmse,mae,rot)
+            output_rows.append([query_img_path,rmse,mae,rot])
 
             metrics_mae.append(mae)
             metrics_rmse.append(rmse)
